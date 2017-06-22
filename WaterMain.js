@@ -16,13 +16,16 @@ function main()
 {
 
     canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    ctx = canvas.getContext('2d');
+    //two envents
     window.addEventListener('keydown', onKeydown);
     canvas.addEventListener('mousemove', onBoom);
+
     var axisX = new Vector2(1, 0);
     var axisY = new Vector2(0, 1);
+
     box = new ContainBox(canvas.width / 2, canvas.height / 2, 500, 500, axisX, axisY);
     onFrame();
 }
@@ -55,6 +58,36 @@ function onBoom(ev)
         }
     }
 }
+
+function renderBg()
+{
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(0,0,0,1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255,255,255,1)";
+    ctx.font = '25px serif';
+    var str = "sapce：" + (createFlg ? "stop creating" : "creat particle");
+    str += "  R:" + (rotateFlg ? "stop rotating" : "rotate box");
+    str += "  particle number:" + particles.length + "/" + MAX;
+    ctx.fillText(str, 10, 50);
+}
+
+
+function createParticle()
+{
+    if (particles.length < MAX)
+    {
+        var pos = new Vector2(box.x, box.y);
+        var p = new Particle(pos);
+        var angle = Math.random() * Math.PI * 2;
+        p.speed.x = Math.cos(angle);
+        p.speed.y = Math.sin(angle);
+        particles.push(p);
+    }
+}
+
+
+
 
 function onFrame()
 {
@@ -140,28 +173,5 @@ function calParticle()
     }
 }
 
-function renderBg()
-{
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "rgba(0,0,0,1)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "rgba(255,255,255,1)";
-    ctx.font = '25px serif';
-    var str = "sapce：" + (createFlg ? "stop creating" : "creat particle");
-    str += "  R:" + (rotateFlg ? "stop rotating" : "rotate box");
-    str += "  particle number:" + particles.length + "/" + MAX;
-    ctx.fillText(str, 10, 50);
-}
 
-function createParticle()
-{
-    if (particles.length < MAX)
-    {
-        var pos = new Vector2(box.x, box.y);
-        var p = new Particle(pos);
-        var angle = Math.random() * Math.PI * 2;
-        p.speed.x = Math.cos(angle);
-        p.speed.y = Math.sin(angle);
-        particles.push(p);
-    }
-}
+
